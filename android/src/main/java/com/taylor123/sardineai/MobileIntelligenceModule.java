@@ -77,7 +77,7 @@ public class MobileIntelligenceModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void submitData(Promise promise) {
+    public void submitData(final Promise promise) {
         Log.d("MobileIntelligenceMod", "submitData");
         MobileIntelligence.submitData(new MobileIntelligence.Callback<MobileIntelligence.SubmitResponse>() {
             @Override
@@ -94,7 +94,7 @@ public class MobileIntelligenceModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void silentAuth(ReadableMap additionalData, Promise promise) {
+    public void silentAuth(ReadableMap additionalData, final Promise promise) {
         Log.d("MobileIntelligenceMod", "silent-auth");
         String number = additionalData.getString("number");
         MobileIntelligence.silentAuth(number, new MobileIntelligence.Callback<MobileIntelligence.SilentAuthResponse>() {
