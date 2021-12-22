@@ -11,10 +11,9 @@ Within ios directory
 ## Usage
 ```javascript
 import RNSardineAi from 'react-native-sardine-ai';
-
-// TODO: What to do with the module?
-RNSardineAi;
 ```
+
+See Sardine documentation for usage.
 
 ##  Troubleshooting
 
@@ -22,3 +21,4 @@ RNSardineAi;
 **Could not find or use auto-linked library 'swiftWebKit' or related**
 
 Add a Swift file (with any name) to the project. Be sure that all needed targets selected for Target Membership
+
