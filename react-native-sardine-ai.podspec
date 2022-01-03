@@ -13,9 +13,9 @@ Pod::Spec.new do |s|
                    DESC
   s.homepage     = "https://github.com/github_account/react-native-sardine-ai"
   # brief license entry:
-  s.license      = "MIT"
+  s.license      = "commercial"
   # optional - use expanded license entry instead:
-  # s.license    = { :type => "MIT", :file => "LICENSE" }
+  s.license    = { :type => "commercial", :file => "LICENSE" }
   s.authors      = { "Your Name" => "yourname@email.com" }
   s.platforms    = { :ios => "9.0" }
   s.source       = { :git => "https://github.com/github_account/react-native-sardine-ai.git", :tag => "#{s.version}" }

@@ -1,7 +1,7 @@
 {
   "name": "react-native-sardine-ai",
   "title": "React Native Sardine Ai",
-  "version": "1.2.5",
+  "version": "1.2.8",
   "description": "TODO",
   "main": "index.js",
   "files": [
@@ -27,7 +27,7 @@
   "author": {
     "name": "Taylor123"
   },
-  "license": "MIT",
+  "license": "commercial",
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
   "peerDependencies": {
