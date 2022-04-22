@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.4.2 (swiftlang-1205.0.28.2 clang-1205.0.19.57)
+// swift-compiler-version: Apple Swift version 5.5.2 (swiftlang-1300.0.47.5 clang-1300.0.29.30)
 // swift-module-flags: -target arm64-apple-ios11.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name MobileIntelligence
 import AdSupport
 import AppTrackingTransparency
@@ -21,6 +21,7 @@ import Swift
 import SystemConfiguration
 import UIKit
 import WebKit
+import _Concurrency
 public enum TextFieldType : Swift.String {
   case userid
   case email
@@ -33,45 +34,21 @@ public enum TextFieldType : Swift.String {
     get
   }
 }
-extension UIView {
-  @objc override dynamic open func touchesBegan(_ touches: Swift.Set<UIKit.UITouch>, with event: UIKit.UIEvent?)
-  @objc override dynamic open func touchesEnded(_ touches: Swift.Set<UIKit.UITouch>, with event: UIKit.UIEvent?)
-  @objc override dynamic open func touchesMoved(_ touches: Swift.Set<UIKit.UITouch>, with event: UIKit.UIEvent?)
-  @objc override dynamic open func touchesCancelled(_ touches: Swift.Set<UIKit.UITouch>, with event: UIKit.UIEvent?)
+extension UIKit.UIView {
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func touchesBegan(_ touches: Swift.Set<UIKit.UITouch>, with event: UIKit.UIEvent?)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func touchesEnded(_ touches: Swift.Set<UIKit.UITouch>, with event: UIKit.UIEvent?)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func touchesMoved(_ touches: Swift.Set<UIKit.UITouch>, with event: UIKit.UIEvent?)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func touchesCancelled(_ touches: Swift.Set<UIKit.UITouch>, with event: UIKit.UIEvent?)
 }
 @_hasMissingDesignatedInitializers public class MobileIntelligence {
   @discardableResult
   convenience public init(withOptions options: MobileIntelligence.Options)
   public class func trackField(forKey key: Swift.String, text: Swift.String)
   public class func submitData(completion: @escaping ((MobileIntelligence.Response) -> ()))
-  public class func updateOptions(options: MobileIntelligence.UpdateOptions)
+  public class func updateOptions(options: MobileIntelligence.UpdateOptions, completion: @escaping ((MobileIntelligence.Response) -> ()))
   public class func getSessionKey() -> Swift.String
   public class func silentAuth(forNumber phoneNumber: Swift.String, correlationId: Swift.String, completion: @escaping ((Swift.Bool) -> ()))
   @objc deinit
-}
-public struct Options : Swift.Codable {
-  public var clientId: Swift.String?
-  public var sessionKey: Swift.String?
-  public var userIdHash: Swift.String?
-  public var environment: Swift.String?
-  public var flow: Swift.String?
-  public var enableBehaviorBiometrics: Swift.Bool?
-  public var enableClipboardTracking: Swift.Bool?
-  public static let ENV_SANDBOX: Swift.String
-  public static let ENV_PRODUCTION: Swift.String
-  public init()
-  public init(clientId: Swift.String, sessionKey: Swift.String, userIdHash: Swift.String, environment: Swift.String, enableBehaviorBiometrics: Swift.Bool, flow: Swift.String, enableClipboardTracking: Swift.Bool = false)
-  public func encode(to encoder: Swift.Encoder) throws
-  public init(from decoder: Swift.Decoder) throws
-}
-public struct UpdateOptions : Swift.Codable {
-  public var sessionKey: Swift.String
-  public var userIdHash: Swift.String
-  public var flow: Swift.String
-  public init()
-  public init(sessionKey: Swift.String = "", userIdHash: Swift.String = "", flow: Swift.String = "")
-  public func encode(to encoder: Swift.Encoder) throws
-  public init(from decoder: Swift.Decoder) throws
 }
 public enum ErrorType : Swift.Error, Foundation.LocalizedError {
   case noInternetConnection
@@ -112,6 +89,45 @@ public struct DevicesResponse : Swift.Codable {
   public func encode(to encoder: Swift.Encoder) throws
   public init(from decoder: Swift.Decoder) throws
 }
+public struct CryptoResponse : Swift.Codable {
+  public var status: Swift.Bool
+  public var data: MobileIntelligence.CryptoDetails?
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct CryptoDetails : Swift.Codable {
+  public var assetType: Swift.String?
+  public var networkFee: Swift.Double?
+  public var price: Swift.Double?
+  public var quantity: Swift.Double?
+  public var quoteId: Swift.String?
+  public var subtotal: Swift.Double?
+  public var total: Swift.Double?
+  public var tradeId: Swift.String?
+  public var transactionFee: Swift.Double?
+  public enum CodingKeys : Swift.String, Swift.CodingKey {
+    case assetType
+    case networkFee
+    case quoteId
+    case tradeId
+    case transactionFee
+    public init?(rawValue: Swift.String)
+    public init?(stringValue: Swift.String)
+    public init?(intValue: Swift.Int)
+    public typealias RawValue = Swift.String
+    public var intValue: Swift.Int? {
+      get
+    }
+    public var rawValue: Swift.String {
+      get
+    }
+    public var stringValue: Swift.String {
+      get
+    }
+  }
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
 public struct SignalsModel : Swift.Codable {
   public var key: Swift.String?
   public var value: Swift.String?
@@ -127,15 +143,40 @@ public enum Model : Swift.String {
     get
   }
 }
-extension UIDevice {
-  public var type: Swift.String {
+extension UIKit.UIDevice {
+  @_Concurrency.MainActor(unsafe) public var type: Swift.String {
     get
   }
-  public var phoneType: Swift.String {
+  @_Concurrency.MainActor(unsafe) public var phoneType: Swift.String {
     get
   }
-  public static let modelIdentifier: Swift.String
-  public func ipAddress() -> (ipv4: Swift.String?, ipv6: Swift.String?)?
+  @_Concurrency.MainActor(unsafe) public static let modelIdentifier: Swift.String
+  @_Concurrency.MainActor(unsafe) public func ipAddress() -> (ipv4: Swift.String?, ipv6: Swift.String?)?
+}
+public struct Options : Swift.Codable {
+  public var clientId: Swift.String?
+  public var sessionKey: Swift.String?
+  public var userIdHash: Swift.String?
+  public var environment: Swift.String?
+  public var flow: Swift.String?
+  public var partnerId: Swift.String?
+  public var enableBehaviorBiometrics: Swift.Bool?
+  public var enableClipboardTracking: Swift.Bool?
+  public static let ENV_SANDBOX: Swift.String
+  public static let ENV_PRODUCTION: Swift.String
+  public init()
+  public init(clientId: Swift.String, sessionKey: Swift.String, userIdHash: Swift.String, environment: Swift.String, enableBehaviorBiometrics: Swift.Bool, flow: Swift.String, partnerId: Swift.String, enableClipboardTracking: Swift.Bool = false)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct UpdateOptions : Swift.Codable {
+  public var userIdHash: Swift.String?
+  public var sessionKey: Swift.String
+  public var flow: Swift.String
+  public init()
+  public init(sessionKey: Swift.String = "", userIdHash: Swift.String?, flow: Swift.String = "")
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
 }
 public struct KycStatusResponse : Swift.Codable {
   public func encode(to encoder: Swift.Encoder) throws
@@ -146,6 +187,9 @@ extension MobileIntelligence.TextFieldType : Swift.Hashable {}
 extension MobileIntelligence.TextFieldType : Swift.RawRepresentable {}
 extension MobileIntelligence.ErrorType : Swift.Equatable {}
 extension MobileIntelligence.ErrorType : Swift.Hashable {}
+extension MobileIntelligence.CryptoDetails.CodingKeys : Swift.Equatable {}
+extension MobileIntelligence.CryptoDetails.CodingKeys : Swift.Hashable {}
+extension MobileIntelligence.CryptoDetails.CodingKeys : Swift.RawRepresentable {}
 extension MobileIntelligence.Model : Swift.Equatable {}
 extension MobileIntelligence.Model : Swift.Hashable {}
 extension MobileIntelligence.Model : Swift.RawRepresentable {}

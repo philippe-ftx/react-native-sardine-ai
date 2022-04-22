@@ -1,7 +1,14 @@
 package com.taylor123.sardineai;
 
+import android.app.Activity;
+import android.os.Build;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
+import com.facebook.react.ReactRootView;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -11,6 +18,9 @@ import com.google.gson.Gson;
 import com.sardine.ai.mdisdk.MobileIntelligence;
 import com.sardine.ai.mdisdk.Options;
 import com.sardine.ai.mdisdk.UpdateOptions;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class MobileIntelligenceModule extends ReactContextBaseJavaModule {
 
@@ -24,10 +34,24 @@ public class MobileIntelligenceModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setupSDK(ReadableMap additionalData, Promise promise) {
-        Log.d("MobileIntelligenceMod", "setupSDK: " + additionalData);
+    public void trackCustomData(ReadableMap stateData, Promise promise){
+        MobileIntelligence.trackCustomData(new Gson().toJson(stateData));
+    }
 
-        if(!additionalData.hasKey("clientId") || !additionalData.hasKey("sessionKey")) {
+    @ReactMethod
+    public void trackTextChange(String viewId, String text){
+        MobileIntelligence.trackTextChange(viewId, text);
+    }
+
+    @ReactMethod
+    public void trackFocusChange(String viewId, boolean isFocus){
+        MobileIntelligence.trackFocusChange(viewId, isFocus);
+    }
+
+    @ReactMethod
+    public void setupSDK(ReadableMap additionalData, Promise promise) {
+
+        if (!additionalData.hasKey("clientId") || !additionalData.hasKey("sessionKey")) {
             promise.resolve(new Response(false, "Failed to initialize").getGson());
             return;
         }
@@ -44,7 +68,7 @@ public class MobileIntelligenceModule extends ReactContextBaseJavaModule {
         if (additionalData.hasKey("flow")) {
             optionBuilder = optionBuilder.setFlow(additionalData.getString("flow"));
         }
-        
+
         try {
             MobileIntelligence.init(this.getReactApplicationContext(), optionBuilder.build());
             promise.resolve(new Response(true, "Initialized successfully").getGson());
@@ -55,24 +79,23 @@ public class MobileIntelligenceModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void updateOptions(ReadableMap additionalData, Promise promise) {
-        Log.d("MobileIntelligenceMod", "updateOptions: " + additionalData);
         String flow = additionalData.getString("flow");
         String sessionKey = additionalData.getString("sessionKey");
         String userIdHash = additionalData.getString("userIdHash");
 
-        if(userIdHash == null && sessionKey == null && flow == null) {
+        if (userIdHash == null && sessionKey == null && flow == null) {
             promise.resolve(new Response(false, "Failed to update options").getGson());
             return;
         }
 
         UpdateOptions.Builder optionBuilder = new UpdateOptions.Builder();
-        if(sessionKey != null) {
+        if (sessionKey != null) {
             optionBuilder.setSessionKey(sessionKey);
         }
-        if(flow != null) {
+        if (flow != null) {
             optionBuilder.setFlow(flow);
         }
-        if(userIdHash != null) {
+        if (userIdHash != null) {
             optionBuilder.setUserIDHash(userIdHash);
         }
 
@@ -82,7 +105,6 @@ public class MobileIntelligenceModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void submitData(final Promise promise) {
-        Log.d("MobileIntelligenceMod", "submitData");
         MobileIntelligence.submitData(new MobileIntelligence.Callback<MobileIntelligence.SubmitResponse>() {
             @Override
             public void onSuccess(MobileIntelligence.SubmitResponse response) {
@@ -99,7 +121,6 @@ public class MobileIntelligenceModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void silentAuth(ReadableMap additionalData, final Promise promise) {
-        Log.d("MobileIntelligenceMod", "silent-auth");
         String number = additionalData.getString("number");
         MobileIntelligence.silentAuth(number, new MobileIntelligence.Callback<MobileIntelligence.SilentAuthResponse>() {
             @Override
