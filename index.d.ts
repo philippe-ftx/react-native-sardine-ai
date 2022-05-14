@@ -9,6 +9,8 @@ export function setupSDK({
   clientId: string;
   sessionKey: string;
   userIdHash?: string;
+  enableBehaviorBiometrics?: boolean;
+  enableClipboardTracking?: boolean;
   environment: "production" | "sandbox";
   flow?: string;
   partnerID?: string;
