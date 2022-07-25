@@ -21,11 +21,6 @@ def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
-plugins {
-    id('com.android.library')
-    id('maven-publish')
-}
-
 buildscript {
     // The Android Gradle plugin is only required when opening the android folder stand-alone.
     // This avoids unnecessary downloads and potential conflicts when the library is included as a
@@ -38,9 +33,14 @@ buildscript {
         dependencies {
             // This should reflect the Gradle plugin version used by
             // the minimum React Native version supported.
-            classpath 'com.android.tools.build:gradle:3.4.1'
+            classpath 'com.android.tools.build:gradle:3.5.2'
         }
     }
+}
+
+plugins {
+    id('com.android.library')
+    id('maven-publish')
 }
 
 android {
